@@ -1,0 +1,14 @@
+{% block content %}
+
+{% endblock %}
+<el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
+  <el-menu-item index="1">首页</el-menu-item>
+  <el-menu-item index="2">部门</el-menu-item>
+  <el-menu-item index="3">产品</el-menu-item>
+  <el-menu-item index="3">供应商</el-menu-item>
+</el-menu>
+<script>
+  function handleSelect(data){
+    console.log(data);
+  }
+</script>

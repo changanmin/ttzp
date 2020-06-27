@@ -7,8 +7,8 @@ const bodyparser = require('koa-bodyparser')
 const logger = require('koa-logger')
 const koajwt = require("koa-jwt");
 const index = require('./routes/index')
-const users = require('./routes/users')
 const session = require("koa-session")
+const cors = require("koa2-cors");
 
 // error handler
 onerror(app)
@@ -28,6 +28,18 @@ const CONFIG = {
   renew: false, /** (boolean) renew session when session is nearly expired, so we can always keep user logged in. (default is false)*/
 };
 app.use(require('koa-static')(__dirname + '/public'))
+app.use(cors({
+  origin: function (ctx) {
+    return ctx.header.origin
+  },
+  allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  credentials: true,
+}))
+app.use(koajwt({
+  secret: "123123"
+}).unless({
+  path: [/^\/login*/]
+}))
 app.use(session(CONFIG, app));
 //定义允许直接访问的url
 const allowpage = ['/login']
@@ -74,7 +86,7 @@ app.use(async (ctx, next) => {
 
 // routes
 app.use(index.routes(), index.allowedMethods())
-app.use(users.routes(), users.allowedMethods())
+// app.use(users.routes(), users.allowedMethods())
 
 // error-handling
 app.on('error', (err, ctx) => {

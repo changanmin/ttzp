@@ -9,7 +9,7 @@ sequelize.authenticate().then(() => {
 }).catch(err => {
   console.error("数据库链接失败", err);
 });
-
+// sequelize.dialect.supports.schemas = true
 module.exports = sequelize;
 
 // await sequelize.sync({ force: true });

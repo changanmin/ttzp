@@ -1,0 +1,6 @@
+{% extends 'views/layout.nunjucks' %} 
+
+
+{% block content %}
+
+{% endblock %} 

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+    <head>
+        <meta charset="utf-8">
+        <title>{{ title }}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link href="/stylesheets/style.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://unpkg.com/element-ui@2.13.2/lib/theme-chalk/index.css">
+    </head>
+    <body>  
+        <div id="app">
+          <div>{{pageData}}</div>
+          <el-table :data="pageData" style="width: 100%">
+          <el-table-column
+            fixed
+            prop="date"
+            label="日期"
+            width="150">
+          </el-table-column>
+          <el-table-column
+            prop="name"
+            label="姓名"
+            width="120">
+          </el-table-column>
+          <el-table-column
+            prop="province"
+            label="省份"
+            width="120">
+          </el-table-column>
+          <el-table-column
+            prop="city"
+            label="市区"
+            width="120">
+          </el-table-column>
+          <el-table-column
+            prop="address"
+            label="地址"
+            width="300">
+          </el-table-column>
+          <el-table-column
+            prop="zip"
+            label="邮编"
+            width="120">
+          </el-table-column>
+          <el-table-column
+            fixed="right"
+            label="操作"
+            width="100">
+            <template slot-scope="scope">
+              <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
+              <el-button type="text" size="small">编辑</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+        </div> 
+    </body>
+    <script src="http://unpkg.com/vue@2.6.11/dist/vue.js"></script>
+    <script src="http://unpkg.com/element-ui@2.13.2/lib/index.js"></script>
+    <script>
+       new Vue({
+            el:"#app",
+            data(){
+              return {
+                activeIndex:"1"
+              }  
+            },
+            methods:{
+                handleSelect(data){
+                    console.log(data);
+                }
+            }
+        })
+    </script>
+</html>

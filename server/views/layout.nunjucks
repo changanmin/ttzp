@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+    <head>
+        <meta charset="utf-8">
+        <title>{{ title }}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link href="/stylesheets/style.css" rel="stylesheet">
+     </head>
+    <body>  
+        <div id="app">
+           welcome 
+        </div> 
+    </body> 
+</html>
