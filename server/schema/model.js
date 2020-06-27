@@ -72,11 +72,12 @@ const Department = sequelize.define('department', {
   // timestamps: false,
 }
 );
-// Category.hasMany(Product);
-// Product.belongsTo(Category);
 
-// Department.hasMany(Category);
-// Category.belongsTo(Department);
+Department.hasMany(Category);
+Category.belongsTo(Department);
+Category.hasMany(Product);
+Product.belongsTo(Category);
+
 
 Category.sync({ force: false }).then(resolve => { }).catch(error => {
   console.log(error)
