@@ -1,11 +1,6 @@
 <template>
-  <el-form
-    :model="ruleForm"
-    :rules="rules"
-    ref="ruleForm"
-    label-width="100px"
-    class="demo-ruleForm"
-  >
+  <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="loginForm">
+    <h4>天天选购</h4>
     <el-form-item label="用户名" prop="ldap">
       <el-input v-model="ruleForm.ldap"></el-input>
     </el-form-item>
@@ -57,4 +52,8 @@ export default {
 </script>
 
 <style>
+.loginForm {
+  width: 300px;
+  margin: 100px auto;
+}
 </style>

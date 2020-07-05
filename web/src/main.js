@@ -3,7 +3,7 @@ import ElementUI from "element-ui";
 import "element-ui/lib/theme-chalk/index.css"
 import App from './App.vue';
 import router from './router';
-import axios from "axios"
+import axios from "./axios.config"
 
 router.beforeEach((to, form, next) => {
   if (to.path === '/login') {
@@ -15,18 +15,9 @@ router.beforeEach((to, form, next) => {
   }
   next();
 })
-//axios拦截器，目的是为了在请求头上带上token
-axios.interceptors.request.use(
-  config => {
-    if (sessionStorage.getItem('token')) {
-      config.headers.token = sessionStorage.getItem('token');
-      // debugger
-    }
-    return config;
-  },
-  error => {
-    return Promise.reject(error);
-  });
+
+
+window.$axios = axios;
 Vue.use(ElementUI)
 Vue.config.productionTip = false;
 

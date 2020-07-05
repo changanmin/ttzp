@@ -67,6 +67,6 @@ UUID
 
 {
   type: DataTypes.UUID,
-  defaultValue: Sequelize.UUIDV4 // Or Sequelize.UUIDV1
+  defaultValuer4: Sequelize.UUIDV4 // Or Sequelize.UUIDV1
 }
 */
