@@ -8,12 +8,15 @@
 </template>
 
 <script>
-import { getValueByPath, valueEquals, isIE, isEdge } from 'element-ui/src/utils/util';
+import {
+  getValueByPath, valueEquals, isIE, isEdge,
+} from 'element-ui/src/utils/util';
+
 export default {
   props: {
     value: {
       type: Number,
-    }
+    },
 
   },
   data() {
@@ -21,7 +24,7 @@ export default {
       t_value: this.value,
       listData: [],
       selectData: [],
-    }
+    };
   },
   computed: {
     // getSelectOptions: {
@@ -38,29 +41,29 @@ export default {
   },
   methods: {
     formatData(data) {
-      return data && data.map(item => {
-        item.label = item.categoryName + "/" + item.shopName;
-        item.value = item.id
+      return data && data.map((item) => {
+        item.label = `${item.categoryName}/${item.shopName}`;
+        item.value = item.id;
         return item;
-      })
+      });
     },
     fetchData() {
-      let data = sessionStorage.getItem("categoryAll");
+      const data = sessionStorage.getItem('categoryAll');
       if (data) {
         this.listData = JSON.parse(data);
         return true;
       }
-      $axios.get("/categoryAll").then(res => {
+      $axios.get('/categoryAll').then((res) => {
         if (res.data.code == 1) {
           this.listData = this.formatData(res.data.data);
-          sessionStorage.setItem("categoryAll", JSON.stringify(this.listData));
+          sessionStorage.setItem('categoryAll', JSON.stringify(this.listData));
         } else {
           this.$message.error(res.data.message);
         }
-      }).catch(error => {
+      }).catch((error) => {
         this.$message.error(error.message);
-      })
-    }
+      });
+    },
   },
   watch: {
     t_value(n) {
@@ -71,9 +74,9 @@ export default {
         this.t_value = val;
         // this.dispatch('ElFormItem', 'el.form.change', val);
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style>

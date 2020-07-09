@@ -13,42 +13,43 @@
   </el-form>
 </template>
 <script>
-import api from "../api";
+import api from '../api';
+
 const API = new api();
 export default {
   data() {
     return {
       ruleForm: {
-        ldap: "ttzp1",
-        password: "111111",
+        ldap: 'ttzp1',
+        password: '111111',
       },
       rules: {
         ldap: [
           { required: true, message: '请输入登录账号', trigger: 'blur' },
         ],
         password: [
-          { required: true, message: '请输入登录密码', trigger: 'blur' }
-        ]
-      }
+          { required: true, message: '请输入登录密码', trigger: 'blur' },
+        ],
+      },
     };
   },
   methods: {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          API.login(this.ruleForm).then(res => {
+          API.login(this.ruleForm).then((res) => {
             if (res) {
-              this.$router.push("/index");
+              this.$router.push('/index');
             }
-          })
+          });
         } else {
           console.log('error submit!!');
           return false;
         }
       });
     },
-  }
-}
+  },
+};
 </script>
 
 <style>

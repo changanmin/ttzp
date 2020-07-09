@@ -1,6 +1,7 @@
-import SelectCategory from "./SelectCategory.vue";
-import SelectDepartment from "./SelectDepartment.vue"
+import SelectCategory from './SelectCategory.vue';
+import SelectDepartment from './SelectDepartment.vue';
+
 export {
   SelectCategory,
-  SelectDepartment
-}
+  SelectDepartment,
+};

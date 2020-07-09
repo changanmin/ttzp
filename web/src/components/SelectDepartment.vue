@@ -10,14 +10,14 @@
 <script>
 export default {
   props: {
-    value: [Number, Array]
+    value: [Number, Array],
   },
   data() {
     return {
       t_value: this.value,
       listData: [],
       selectData: [],
-    }
+    };
   },
   computed: {
 
@@ -27,41 +27,41 @@ export default {
   },
   methods: {
     formatData(data) {
-      return data && data.map(item => {
+      return data && data.map((item) => {
         item.label = item.name;
-        item.value = item.id
+        item.value = item.id;
         return item;
-      })
+      });
     },
     fetchData() {
-      let data = sessionStorage.getItem("departmentAll");
+      const data = sessionStorage.getItem('departmentAll');
       if (data) {
         this.listData = JSON.parse(data);
         return true;
       }
-      $axios.get("/departmentAll").then(res => {
+      $axios.get('/departmentAll').then((res) => {
         if (res.data.code == 1) {
           this.listData = this.formatData(res.data.data);
-          sessionStorage.setItem("departmentAll", JSON.stringify(this.listData));
+          sessionStorage.setItem('departmentAll', JSON.stringify(this.listData));
         } else {
           this.$message.error(res.data.message);
         }
-      }).catch(error => {
+      }).catch((error) => {
         this.$message.error(error.message);
-      })
-    }
+      });
+    },
   },
   watch: {
     t_value(n) {
-      this.$emit("input", n)
+      this.$emit('input', n);
     },
     value(val, oldVal) {
       if (val !== oldVal) {
         this.t_value = val;
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style>

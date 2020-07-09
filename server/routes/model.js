@@ -84,6 +84,9 @@ const Product = sequelize.define('Product', {
   suffix: {
     type: DataTypes.STRING,
   },
+  content: {
+    type: DataTypes.STRING,
+  },
   desc: {
     type: DataTypes.STRING,
   },
@@ -272,6 +275,7 @@ class ProductModel {
       suffix: data.suffix,
       desc: data.desc,
       cid: data.category,
+      content: "",
     });
 
     const dep = await Department.findAll({ where: { id: data.department } });
@@ -292,12 +296,30 @@ class ProductModel {
       }]
     });
   }
-  static async queryByCategory(data) {
-    // return await Product.findAll({
-    //   where: {
-    //     categoryCode: data
-    //   }
-    // })
+  static async delProduct(id) {
+    return await Product.destroy({
+      where: {
+        id: id
+      }
+    })
+  }
+  static async updateProduct(params) {
+
+    await Product.update({
+      name: params.name,
+      suffix: params.suffix,
+      content: params.content,
+      desc: params.desc,
+      cid: params.category,
+    }, {
+      where: {
+        id: params.id
+      }
+    });
+    const product = await Product.findOne({ where: { id: params.id } });
+    const dep = await Department.findAll({ where: { id: params.department } });
+    await product.setDepartments(dep);
+    return await this.all();
   }
 }
 

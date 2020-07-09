@@ -1,126 +1,147 @@
 <template>
-  <div class="home" v-loading.fullscreen.lock="loading">
+  <div class="home" v-loading="loading">
     <el-card :body-style="{padding:'10px'}" shadow="always">
       <el-row>
+        <el-col :span="4">
+          <el-link type="primary" @click="handleGenerate">生成</el-link>
+        </el-col>
         <el-col :span="16">欢迎您:{{shopName}}</el-col>
         <el-col :span="4">
           <el-link type="primary" @click="logout">退出</el-link>
         </el-col>
       </el-row>
     </el-card>
-    <!-- <el-alert title type="info" :closable="false" effect="dark"></el-alert> -->
     <el-tabs
       type="border-card"
       style="margin-top:10px;"
-      v-model="activeName"
+      v-model="activeTab"
       @tab-click="handleClick"
     >
-      <el-tab-pane v-for="(item,index) in list" :label="item.name" :name="item.id+''">
-        <!-- <div>{{categoryData['tab-'+item.id]}}</div> -->
-        <el-card
-          class="box-card"
-          v-for="citem in categoryData['tab-'+item.id]"
-          v-if="citem.Products.length > 0"
-        >
-          <div slot="header" class="clearfix">
-            <span>{{citem.categoryName}}</span>
-          </div>
-          <el-form ref="form" :model="form" label-width="80px">
-            <el-form-item v-for="pitem in citem.Products">
-              <el-input v-model="pitem.desc" style="width:250px">
-                <template slot="prepend">{{pitem.name}}</template>
-                <template slot="append">{{pitem.suffix}}</template>
-              </el-input>
-            </el-form-item>
-          </el-form>
-        </el-card>
-      </el-tab-pane>
+      <template v-for="(item,index) in listTab">
+        <el-tab-pane :key="index" :label="item.name" :name="`${item.id}`">
+          <ProductForm
+            :ref="`${item.name}&${item.id}`"
+            v-if="item.id"
+            @get-data="handleGetData"
+            :dataId="item.id"
+          />
+        </el-tab-pane>
+      </template>
       <el-tab-pane label="添加商品" name="addProduct">
-        <div>
-          <AddProduct />
-        </div>
+        <AddProduct v-if="activeTab==='addProduct'" />
       </el-tab-pane>
     </el-tabs>
   </div>
 </template>
 
-<script>
-// @ is an alias to /src
-// import HelloWorld from '@/components/HelloWorld.vue';
-import AddProduct from "./add/addProduct";
+<script> 
+const AddProduct = (resolve) => import('./add/addProduct');
+const ProductForm = (resolve) => import("./add/dfrom")
 
 export default {
   name: 'Home',
   components: {
-    // HelloWorld,
-    AddProduct
+    AddProduct,
+    ProductForm
   },
   data() {
     return {
       loading: true,
-      activeName: null,
-      shopName: "",
-      list: [],
-      categoryData: {},
+      activeTab: "",
+      shopName: '',
+      listTab: [],
+      selectData: {},
     };
   },
   created() {
-    this.fetchData();
-    let userInfoStr = sessionStorage.getItem("userInfo");
-    let userInfo = JSON.parse(userInfoStr);
+    const userInfoStr = sessionStorage.getItem('userInfo');
+    const userInfo = JSON.parse(userInfoStr);
     this.shopName = userInfo.name;
+    (async () => {
+      let bool = await this.fetchData();
+      console.log(bool);
+      this.loading = false;
+    })()
   },
   methods: {
+    handleGetData({ id, list = [] } = {}) {
+      console.log("handleGetData");
+      /** 
+       * 1.子组件每次更新数据后把选中的数据丢给父级，父级进行累计
+       */
+      if (!id || list.length <= 0) return false;
+      /* 去除重复的数据 */
+      // this.selectData.set(id, list);
+      let item = this.listTab.find(item => item.id === id);
+      this.$set(this.selectData, id, { dep: item, prs: list });
+      window.localStorage.setItem("SelectProducts", JSON.stringify(this.selectData));
+    },
+    handleGenerate() {
+      let url = window.location.origin + "/#/print";
+      const printPage = window.open(url);
+      printPage.opener = null;
+    },
     /**
      * 退出登录
      */
     logout() {
-      window.sessionStorage.removeItem("token");
-      this.$router.push("/");
+      this.$confirm('确认退出？')
+        .then(_ => {
+          window.localStorage.clear();
+          window.sessionStorage.clear();
+          this.$router.push('/login');
+        })
+        .catch(_ => { });
     },
     handleClick(tab, event) {
-      console.log(tab, event);
-      //根据选中的 部门 选择部门下大类别和产品
-      this.fetchCategoryData(tab.name);
-    },
-    fetchCategoryData(depId) {
-      this.loading = true;
-      const self = this;
-      const key = `tab-${depId}`;
-      let str = window.sessionStorage.getItem(key);
-      if (str) {
-        let data = JSON.parse(str);
-        self.categoryData[key] = data;
-        this.loading = false;
-      } else {
-        $axios.get("/allByDep?id=" + depId).then(res => {
-          if (res.data.code === 1) {
-            self.categoryData[key] = res.data.data;
-            window.sessionStorage.setItem(key, JSON.stringify(res.data.data));
-            this.loading = false;
-          }
-        }).catch(error => {
-          console.log(error);
-        });
+      // 根据选中的 部门 选择部门下大类别和产品
+      if (tab.name !== "addProduct") {
+        this.fetchCategoryData(tab.name);
       }
     },
-    fetchData() {
-      this.loading = true;
+    fetchCategoryData(depId) {
       const self = this;
-      $axios.get("/departmentAll").then(res => {
-        if (res.data.code === 1) {
-          self.list = res.data.data;
-          //生成多项列表内容
-          self.list.forEach(item => {
-            self.categoryData['tab-' + item.id] = [];
-          })
-          self.activeName = self.list[0].id + '';
-          this.fetchCategoryData(self.list[0].id);
-        }
-      }).catch(error => {
-        console.log(error);
+      return new Promise(resolve => {
+        const key = `tab-${depId}`;
+        $axios.get(`/allByDep?id=${depId}`).then((res) => {
+          if (res.data.code === 1) {
+            let index = self.listTab.findIndex(item => item.id === +depId);
+            self.$set(self.listTab[index], "categoryData", res.data.data);
+            // self.$set(self.categoryData, key, res.data.data);
+          }
+          resolve(true)
+        }).catch((error) => {
+          console.log(error);
+        });
+      })
+    },
+    fetchData() {
+      const self = this;
+      return new Promise(resolve => {
+        $axios.get('/departmentAll').then(async (res) => {
+          if (res.data.code === 1) {
+            self.$set(self.$data, 'listTab', res.data.data);
+            // // 生成多项列表内容
+            // let obj = {};
+            // res.data.data.forEach((item) => {
+            //   obj[`tab-${item.id}`] = []
+            // });
+            // self.$set(self.$data, `categoryData`, obj);
+            self.activeTab = `${self.listTab[0].id}`;
+            resolve(true)
+            // resolve(await self.fetchCategoryData(self.listTab[0].id));
+          }
+        }).catch((error) => {
+          console.log(error);
+        });
       });
     }
-  },
+  }
 };
 </script>
+
+<style>
+.el-input__inner {
+  font-weight: bolder;
+}
+</style>

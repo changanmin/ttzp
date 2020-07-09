@@ -7,10 +7,10 @@ Vue.use(VueRouter);
 const routes = [
   {
     path: '/',
-    redirect: "/login"
+    redirect: '/index',
   },
   {
-    path: "/index",
+    path: '/index',
     name: 'Home',
     component: Home,
   },
@@ -22,6 +22,11 @@ const routes = [
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "about" */ '../views/Login.vue'),
   },
+  {
+    path: "/print",
+    name: "Print",
+    component: () => import(/* webpackChunkName: "print" */ '../views/Print.vue'),
+  }
 ];
 
 const router = new VueRouter({
