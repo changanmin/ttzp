@@ -1,6 +1,8 @@
 {
-  "name": "web",
+  "name": "ttzp",
   "version": "0.1.0",
+  "author": "Anmin",
+  "email": "anmin@foxmail.com",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -46,8 +48,8 @@
     "rules": {}
   },
   "browserslist": [
-    "> 1%",
-    "last 2 versions",
+    "> 10%",
+    "last 5 versions",
     "not dead"
   ]
 }

@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" ref="ttzpHome">
     <!-- <div id="nav">
       <router-link to="/">首页</router-link>|
       <router-link to="/about">用户</router-link>|
@@ -8,8 +8,12 @@
     <router-view />
   </div>
 </template>
-
+<script>
+</script>
 <style lang="scss">
+body {
+  background-image: url(https://api.xygeng.cn/Bing);
+}
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;

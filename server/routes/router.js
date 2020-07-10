@@ -2,15 +2,10 @@ const router = require('koa-router')()
 const Service = require("./service");
 const { ProductModel, CategoryModel, DepartmentModel, UserModel } = require("./model")
 router.get('/', async (ctx, next) => {
-  await ctx.render('index', {
-    title: 'Hello!'
-  })
+  await ctx.render("index");
 })
 //登录
 router.post('/login', Service.login);
-
-//
-
 //
 //查询产品
 // router.post("/productPages", Service.productPages);
@@ -111,6 +106,6 @@ router.post("/updateProduct", async (ctx) => {
       message: error.message
     }
   }
-})
+});
 
 module.exports = router

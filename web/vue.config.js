@@ -1,4 +1,5 @@
 module.exports = {
+  outputDir: "../server/public/dist",
   publicPath: './',
   lintOnSave: false,
   devServer: {
@@ -6,4 +7,10 @@ module.exports = {
     port: 8080,
     proxy: 'http://localhost:3000',
   },
+  chainWebpack: (config) => {
+    config.plugin('html').tap(args => {
+      args[0].title = "采购清单生成";
+      return args;
+    })
+  }
 };
