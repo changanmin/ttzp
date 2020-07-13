@@ -19,6 +19,12 @@
     >
       <template v-for="(item,index) in listTab">
         <el-tab-pane :key="index" :label="item.name" :name="`${item.id}`">
+          <!-- <ProductForm
+            :ref="`${item.name}&${item.id}`"
+            v-if="item.id"
+            @get-data="handleGetData"
+            :dataId="item.id"
+          />-->
           <ProductForm
             :ref="`${item.name}&${item.id}`"
             v-if="item.id"
@@ -36,7 +42,9 @@
 
 <script> 
 const AddProduct = (resolve) => import('./add/addProduct');
-const ProductForm = (resolve) => import("./add/dfrom")
+// const ProductForm = (resolve) => import("./add/dfrom");
+const ProductForm = (resolve) => import("./add/table")
+
 
 export default {
   name: 'Home',

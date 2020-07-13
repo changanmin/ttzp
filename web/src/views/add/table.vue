@@ -1,5 +1,5 @@
 <template>
-  <div :loading="loading" v-if="dataId && dataList">
+  <div :loading="loading">
     <template v-for="(item,index) in dataList">
       <el-card
         style="margin:10px 0 0 0;"
@@ -10,23 +10,23 @@
         <div slot="header" class="clearfix" style="text-align:left;">
           <span>{{item.categoryName}}</span>
         </div>
-        <div style="text-align:left;">
-          <template v-for="(child,cIndex) in item.Products">
-            <el-input
-              v-model.trim="child.content"
-              class="myinput"
-              :key="cIndex"
-              @change="handleGeneratorData"
-            >
-              <template slot="prepend">{{child.name}}</template>
-              <template slot="append">{{child.suffix}}</template>
-            </el-input>
-          </template>
-        </div>
+        <template v-for="(child,cIndex) in item.Products">
+          <label :for="'input_'+child.id">{{child.name}}</label>
+          <el-input
+            v-model.trim="child.content"
+            class="myinput"
+            :name="'input_'+child.id"
+            :key="cIndex"
+            @change="handleGeneratorData"
+          >
+            <template slot="append">{{child.suffix}}</template>
+          </el-input>
+        </template>
       </el-card>
     </template>
   </div>
 </template>
+
 
 <script>
 export default {
@@ -89,6 +89,7 @@ export default {
   }
 }
 </script>
+
 
 <style>
 .myinput {

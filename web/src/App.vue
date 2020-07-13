@@ -12,7 +12,7 @@
 </script>
 <style lang="scss">
 body {
-  background-image: url(https://api.xygeng.cn/Bing);
+  // background-image: url(https://api.xygeng.cn/Bing);
 }
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
