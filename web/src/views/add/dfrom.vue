@@ -13,7 +13,7 @@
         <div style="text-align:left;">
           <el-row :gutter="10" type="flex" style="flex-wrap: wrap;">
             <template v-for="(child, cIndex) in item.Products">
-              <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4" :key="cIndex">
+              <el-col :xs="24" :sm="12" :md="8" :lg="4" :xl="3" :key="cIndex">
                 <el-input
                   v-model.trim="child.content"
                   class="myinput"
@@ -91,9 +91,14 @@ export default {
 };
 </script>
 
-<style lang="sass" scoped>
+<style lang="sass">
 .el-col
   margin-bottom: 20px
   &:last-child
     margin-bottom: 0
+.myinput
+  div
+    color: #000
+  input
+    text-align: center
 </style>
