@@ -81,7 +81,7 @@ export default {
           }
         });
       });
-      this.$emit("get-data", products);
+      this.$emit("get-data", products, this.dataId);
       return products;
     },
     handleGeneratorData() {

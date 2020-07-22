@@ -83,7 +83,7 @@ export default {
         })
         .catch(() => {});
     },
-    handleGetData(list = []) {
+    handleGetData(list = [], flag) {
       console.log("handleGetData");
       /**
        * 1.子组件每次更新数据后把选中的数据丢给父级，父级进行累计
@@ -93,7 +93,13 @@ export default {
       // this.selectData.set(id, list);
       // let item = this.listTab.find(item => item.id === id);
       // this.$set(this.selectData, id, { dep: item, prs: list });
-      window.localStorage.setItem("SelectProducts", JSON.stringify(list));
+      let dataStr = window.localStorage.getItem("SelectProducts");
+      let data = {};
+      if (dataStr) {
+        data = JSON.parse(dataStr);
+      }
+      data[`flag-${flag}`] = list;
+      window.localStorage.setItem("SelectProducts", JSON.stringify(data));
     },
     handleGenerate() {
       let url = window.location.origin + "/#/print";

@@ -8,18 +8,19 @@
         style="width:280px;margin: 7px;"
       >
         <div slot="header" class="clearfix">
-          <span>{{ item.name }}</span>
+          <span>{{ item.name+" ---" +shopName }}</span>
           <el-button
             style="float: right; padding: 3px 0"
             icon="el-icon-copy-document"
             type="text"
             @click="handleCopy(item.cid)"
-            >复制</el-button
-          >
+          >复制</el-button>
         </div>
-        <div v-for="(child, cindex) in item.list" :key="cindex" class="text item">
-          {{ `${child.name}:${child.content}${child.suffix}` }}
-        </div>
+        <div
+          v-for="(child, cindex) in item.list"
+          :key="cindex"
+          class="text item"
+        >{{ `${child.name}:${child.content}${child.suffix}` }}</div>
       </el-card>
     </template>
     <textarea ref="text" style="width:0px;height:0px;marign:0;padding:0;outline:none;"></textarea>
@@ -31,8 +32,14 @@ export default {
   name: "Print",
   data() {
     return {
+      shopName: "",
       listData: {}
     };
+  },
+  created() {
+    const userInfoStr = sessionStorage.getItem("userInfo");
+    const userInfo = JSON.parse(userInfoStr);
+    this.shopName = userInfo.name;
   },
   mounted() {
     /**
@@ -47,21 +54,35 @@ export default {
     data && this.formatData(JSON.parse(data));
   },
   methods: {
+    totalData(data) {
+      let arr = [];
+      if (data) {
+        for (const key in data) {
+          if (data.hasOwnProperty(key)) {
+            const element = data[key];
+            arr = arr.concat(element);
+          }
+        }
+      }
+      return arr;
+    },
     /**
      * 数据整理成需要的样式
      * 1.重复产品 采购数据 累加
      * 2.根据类别分类展示
      *
      */
-    formatData(data) {
+    formatData(odata) {
+      let data = this.totalData(odata);
       //重复产品累加采购数量
       let gc = new Map();
+
       data.map(item => {
         let key = item.id;
         let p = item;
         if (gc.has(key)) {
           p = gc.get(key);
-          p.content += +item.content;
+          p.content = +p.content + +item.content;
         }
         gc.set(key, p);
       });

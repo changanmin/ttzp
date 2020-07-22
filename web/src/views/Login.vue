@@ -24,8 +24,8 @@ export default {
   data() {
     return {
       ruleForm: {
-        ldap: "ttzp1",
-        password: "111111"
+        ldap: "",
+        password: ""
       },
       rules: {
         ldap: [{ required: true, message: "请输入登录账号", trigger: "blur" }],
