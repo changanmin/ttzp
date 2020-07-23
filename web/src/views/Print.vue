@@ -126,7 +126,7 @@ export default {
     handleCopy(key) {
       const self = this;
       let obj = self.listData.find((item) => item.id === key);
-      let text = `${this.shopName}\n${obj.name}\n`;
+      let text = `${obj.name}--${this.shopName}\n`;
       obj.list.map((item) => {
         text += `${item.name}:${item.content}${item.suffix}\n`;
       });
