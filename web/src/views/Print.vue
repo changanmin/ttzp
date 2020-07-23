@@ -13,17 +13,20 @@
             style="float: right; padding: 3px 0"
             icon="el-icon-copy-document"
             type="text"
-            @click="handleCopy(item.cid)"
+            @click="handleCopy(item.id)"
           >复制</el-button>
         </div>
         <div
           v-for="(child, cindex) in item.list"
           :key="cindex"
-          class="text item"
+          class="text-item"
         >{{ `${child.name}:${child.content}${child.suffix}` }}</div>
       </el-card>
     </template>
-    <textarea ref="text" style="width:0px;height:0px;marign:0;padding:0;outline:none;"></textarea>
+    <textarea
+      ref="text"
+      style="width: 0px; height: 0px; border: none; padding: 0.1px; margin-left: -1000px;"
+    ></textarea>
   </div>
 </template>
 
@@ -33,7 +36,7 @@ export default {
   data() {
     return {
       shopName: "",
-      listData: {}
+      listData: {},
     };
   },
   created() {
@@ -77,7 +80,7 @@ export default {
       //重复产品累加采购数量
       let gc = new Map();
 
-      data.map(item => {
+      data.map((item) => {
         let key = item.id;
         let p = item;
         if (gc.has(key)) {
@@ -101,11 +104,11 @@ export default {
       let list = [];
       //转成对象解析
       for (let [key, value] of groupP) {
-        let p = value.find(item => item.cName);
+        let p = value.find((item) => item.cName);
         list.push({
           name: p.cName,
           id: key,
-          list: value
+          list: value,
         });
       }
       console.log(list);
@@ -122,23 +125,27 @@ export default {
     },
     handleCopy(key) {
       const self = this;
-      let obj = self.listData.find(item => item.cid === key);
-      let text = `\n`;
-
-      obj.list.map(item => {
+      let obj = self.listData.find((item) => item.id === key);
+      let text = `${this.shopName}\n${obj.name}\n`;
+      obj.list.map((item) => {
         text += `${item.name}:${item.content}${item.suffix}\n`;
       });
+      self.$refs.text.value = "";
       self.$refs.text.value = text;
       self.$refs.text.select(); // 选择对象
       document.execCommand("Copy"); // 执行浏览器复制命令
       self.$message({
         message: `${obj.name}:复制成功`,
         type: "success",
-        duration: 1000
+        duration: 1000,
       });
-    }
-  }
+    },
+  },
 };
 </script>
 
-<style></style>
+<style scoped>
+.text-item {
+  text-align: left;
+}
+</style>

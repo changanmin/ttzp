@@ -37,13 +37,13 @@ export default {
   props: {
     dataId: {
       type: Number,
-      require: true
-    }
+      require: true,
+    },
   },
   data() {
     return {
       loading: true,
-      dataList: null
+      dataList: null,
     };
   },
   async created() {
@@ -56,25 +56,43 @@ export default {
   mounted() {},
   methods: {
     init(id) {
-      new Promise(resolve => {
+      new Promise((resolve) => {
         $axios
           .get(`/allByDep?id=${id}`)
-          .then(res => {
+          .then((res) => {
             if (res.data.code === 1) {
               this.$set(this.$data, "dataList", res.data.data);
+              //查询当前缓存中是否存在数据
+              let loDataStr = window.localStorage.getItem("SelectProducts");
+              if (loDataStr) {
+                let loData = JSON.parse(loDataStr);
+                if (loData[`flag-${id}`]) {
+                  let _d = this.dataList.map((item) => {
+                    item.Products = item.Products.map((pItem) => {
+                      let _t = loData[`flag-${id}`].find((sItem) => sItem.id === pItem.id);
+                      if (_t) {
+                        pItem["content"] = _t.content;
+                      }
+                      return pItem;
+                    });
+                    return item;
+                  });
+                  this.$set(this.$data, "dataList", _d);
+                }
+              }
               resolve(true);
             }
             resolve(true);
           })
-          .catch(error => {
+          .catch((error) => {
             console.log(error);
           });
       });
     },
     getSelected() {
       let products = [];
-      this.dataList.map(item => {
-        item.Products.map(pItem => {
+      this.dataList.map((item) => {
+        item.Products.map((pItem) => {
           if (pItem.content) {
             pItem.cName = item.categoryName;
             products.push(pItem);
@@ -86,8 +104,8 @@ export default {
     },
     handleGeneratorData() {
       this.getSelected();
-    }
-  }
+    },
+  },
 };
 </script>
 

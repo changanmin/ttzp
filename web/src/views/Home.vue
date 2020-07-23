@@ -7,7 +7,7 @@
         </el-col>
         <el-col :span="16">欢迎您:{{ shopName }}</el-col>
         <el-col :span="4">
-          <el-link type="primary" @click="handleResetAll">重置所有</el-link>
+          <el-link style="margin-right:20px;" type="primary" @click="handleResetAll">重置所有</el-link>
           <el-link type="primary" @click="logout">退出</el-link>
         </el-col>
       </el-row>
@@ -36,14 +36,14 @@
 </template>
 
 <script>
-const AddProduct = resolve => import("./add/addProduct");
-const ProductForm = resolve => import("./add/dfrom");
+const AddProduct = (resolve) => import("./add/addProduct");
+const ProductForm = (resolve) => import("./add/dfrom");
 
 export default {
   name: "Home",
   components: {
     AddProduct,
-    ProductForm
+    ProductForm,
   },
   data() {
     return {
@@ -51,7 +51,7 @@ export default {
       activeTab: "",
       shopName: "",
       listTab: [],
-      selectData: {}
+      selectData: {},
     };
   },
   created() {
@@ -69,13 +69,13 @@ export default {
       this.$confirm("确定清理所有选择的产品，是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning"
+        type: "warning",
       })
         .then(() => {
           window.localStorage.removeItem("SelectProducts");
           this.$message({
             type: "success",
-            message: "删除成功!,3秒后会自动刷新页面"
+            message: "删除成功!,3秒后会自动刷新页面",
           });
           setTimeout(() => {
             window.location.reload();
@@ -111,12 +111,12 @@ export default {
      */
     logout() {
       this.$confirm("确认退出？")
-        .then(_ => {
+        .then((_) => {
           window.localStorage.clear();
           window.sessionStorage.clear();
           this.$router.push("/login");
         })
-        .catch(_ => {});
+        .catch((_) => {});
     },
     handleClick(tab, event) {
       // 根据选中的 部门 选择部门下大类别和产品
@@ -126,29 +126,29 @@ export default {
     },
     fetchCategoryData(depId) {
       const self = this;
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         const key = `tab-${depId}`;
         $axios
           .get(`/allByDep?id=${depId}`)
-          .then(res => {
+          .then((res) => {
             if (res.data.code === 1) {
-              let index = self.listTab.findIndex(item => item.id === +depId);
+              let index = self.listTab.findIndex((item) => item.id === +depId);
               self.$set(self.listTab[index], "categoryData", res.data.data);
               // self.$set(self.categoryData, key, res.data.data);
             }
             resolve(true);
           })
-          .catch(error => {
+          .catch((error) => {
             console.log(error);
           });
       });
     },
     fetchData() {
       const self = this;
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         $axios
           .get("/departmentAll")
-          .then(async res => {
+          .then(async (res) => {
             if (res.data.code === 1) {
               self.$set(self.$data, "listTab", res.data.data);
               // // 生成多项列表内容
@@ -162,12 +162,12 @@ export default {
               // resolve(await self.fetchCategoryData(self.listTab[0].id));
             }
           })
-          .catch(error => {
+          .catch((error) => {
             console.log(error);
           });
       });
-    }
-  }
+    },
+  },
 };
 </script>
 
